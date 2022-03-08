@@ -1,9 +1,11 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Calendar from "./Calendar";
 import "./CalendarBox.css";
 import { SearchIcon } from "@chakra-ui/icons";
-import { addMonths, addDays } from "date-fns";
+import { addMonths, addDays, format, isAfter } from "date-fns";
+import nb from "date-fns/locale/nb";
+import Cell from "./Cell";
 
 interface CalendarBoxProps {
   title?: string;
@@ -11,6 +13,19 @@ interface CalendarBoxProps {
 
 function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
   let [currentDate, setDate] = useState(new Date());
+  let [fromDate, setFrom] = useState(null);
+  let [toDate, setTo] = useState(null);
+
+  let onCellClick = (options: any) => {
+    if (fromDate && toDate) {
+      setFrom(null);
+      setTo(null);
+    } else if (!fromDate) {
+      setFrom(options.cellDate);
+    } else if (!toDate && isAfter(options.cellDate, fromDate)) {
+      setTo(options.cellDate);
+    }
+  };
 
   return (
     <div className="calendar-box">
@@ -18,18 +33,36 @@ function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
       <div className="inputs"></div>
       <div className="calendar1">
         <Calendar
-          currentDate={currentDate}
+          date={currentDate}
           onPrev={(newDate) => setDate(newDate)}
-          disablePast={true}
-          fromDate={new Date(2022, 2, 7)}
-          toDate={addDays(new Date(2022, 2, 7), 4)}
+          fromDate={fromDate}
+          toDate={toDate}
+          renderCell={(options) => (
+            <Cell
+              onClick={() => onCellClick(options)}
+              isSelected={options.isSelected}
+              key={options.index}
+            >
+              {options.cellDate ? options.cellDate.getDate() : null}
+            </Cell>
+          )}
         />
       </div>
       <div className="calendar2">
         <Calendar
-          currentDate={addMonths(currentDate, 1)}
+          date={addMonths(currentDate, 1)}
           onNext={(newDate) => setDate(newDate)}
-          disablePast={true}
+          fromDate={fromDate}
+          toDate={toDate}
+          renderCell={(options) => (
+            <Cell
+              onClick={() => onCellClick(options)}
+              isSelected={options.isSelected}
+              key={options.index}
+            >
+              {options.cellDate ? options.cellDate.getDate() : null}
+            </Cell>
+          )}
         />
       </div>
       <div className="rules"></div>

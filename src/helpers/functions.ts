@@ -25,13 +25,27 @@ export function ucfirst(value: string) {
   return firstChar + value.slice(1);
 }
 
-export function isInRange(selectedDate: Date, fromDate: Date, toDate: Date) {
+export function isBetween(
+  cellDate: Date,
+  fromDate: Date | null | undefined,
+  toDate: Date | null | undefined
+): boolean {
+  if (fromDate == null || toDate == null) return false;
   return (
-    (fromDate &&
-      toDate &&
-      isBefore(fromDate, selectedDate) &&
-      isAfter(toDate, selectedDate)) ||
-    (fromDate && isEqual(selectedDate, fromDate)) ||
-    (toDate && isEqual(selectedDate, toDate))
+    fromDate &&
+    toDate &&
+    isBefore(fromDate, cellDate) &&
+    isAfter(toDate, cellDate)
+  );
+}
+
+export function isSelected(
+  cellDate: Date,
+  fromDate: Date | null | undefined,
+  toDate: Date | null | undefined
+): boolean {
+  return (
+    (fromDate != null && isEqual(cellDate, fromDate)) ||
+    (toDate != null && isEqual(cellDate, toDate))
   );
 }

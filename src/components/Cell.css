@@ -1,0 +1,26 @@
+.cell {
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selected {
+  border: 1px solid cadetblue;
+  background-color: cadetblue;
+  border-radius: 50px;
+}
+
+.disabled {
+  opacity: 0.3;
+}
+
+.cell:hover {
+  border: 1px solid cadetblue;
+  cursor: pointer;
+}

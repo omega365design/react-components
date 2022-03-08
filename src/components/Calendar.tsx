@@ -1,84 +1,49 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import "./Calendar.css";
-import Cell from "./Cell";
-import { getDates, ucfirst } from "../helpers/functions";
+import { getDates, isBetween, isSelected, ucfirst } from "../helpers/functions";
 import { Flex, Box, IconButton } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   format,
   subMonths,
   addMonths,
-  isPast,
   isThisYear,
-  getDate,
   differenceInDays,
-  isBefore,
-  isAfter,
-  isEqual,
 } from "date-fns";
 import nb from "date-fns/locale/nb";
-
-interface CalendarProps {
-  currentDate: Date;
-  disablePast?: boolean;
-  onDateClick?: (date: Date) => void;
-  fromDate?: Date;
-  toDate?: Date;
-  onPrev?: (date: Date) => void;
-  onNext?: (date: Date) => void;
-}
+import { isPast } from "date-fns/esm";
+import { CalendarProps } from "../helpers/types";
 
 function Calendar({
-  currentDate,
+  date,
   onPrev,
   onNext,
-  disablePast,
-  onDateClick,
   fromDate,
   toDate,
+  renderCell,
 }: CalendarProps) {
   function handlePrevDate() {
-    if (onPrev) onPrev(subMonths(currentDate, 1));
+    if (onPrev) onPrev(subMonths(date, 1));
   }
 
   function handleNextDate() {
-    if (onNext) onNext(addMonths(currentDate, 1));
+    if (onNext) onNext(addMonths(date, 1));
   }
 
-  let dayToCell = (day: string) => (
-    <Cell key={day}>
-      <div className="day">{day}</div>
-    </Cell>
+  let dayToCell = (day: string, i: number) => (
+    <div key={i} className="day">
+      {day}
+    </div>
   );
 
-  let dateToCell = (date: Date, i: number) => (
-    <Cell
-      key={i}
-      isSelected={
-        (fromDate &&
-          toDate &&
-          isBefore(fromDate, date) &&
-          isAfter(toDate, date)) ||
-        (fromDate && isEqual(date, fromDate)) ||
-        (toDate && isEqual(date, toDate))
-      }
-      disabled={
-        disablePast
-          ? isPast(date) && differenceInDays(new Date(), date) > 0
-          : false
-      }
-    >
-      <div
-        className={
-          fromDate && isEqual(date, fromDate)
-            ? "selected-cell-button"
-            : "cell-button"
-        }
-      >
-        {date && getDate(date)}
-      </div>
-    </Cell>
-  );
+  let dateToCell = (date: Date, i: number) =>
+    renderCell({
+      cellDate: date,
+      isBetween: isBetween(date, fromDate, toDate),
+      isSelected: isSelected(date, fromDate, toDate),
+      isPast: isPast(date) && differenceInDays(new Date(), date) > 0,
+      index: i,
+    });
 
   return (
     <Box className="calendar">
@@ -94,7 +59,7 @@ function Calendar({
         </Box>
         <Box>
           {ucfirst(
-            format(currentDate, isThisYear(currentDate) ? "LLLL" : "LLLL Y", {
+            format(date, isThisYear(date) ? "LLLL" : "LLLL Y", {
               locale: nb,
             })
           )}
@@ -113,7 +78,7 @@ function Calendar({
         {["man", "tir", "ons", "tor", "fre", "lør", "søn"]
           .map(ucfirst)
           .map(dayToCell)}
-        {getDates(currentDate).map(dateToCell)}
+        {getDates(date).map(dateToCell)}
       </div>
     </Box>
   );
