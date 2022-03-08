@@ -69,13 +69,17 @@ function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
       );
     }
 
-    return (
+    /* return (
       <Button
         onClick={() => onCellClick(options)}
         key={options.index}
         disabled={options.isPast}
         colorScheme={
-          options.isBetween
+          options.cellDate
+            ? options.cellDate.getDay() == 0
+              ? "pink"
+              : "yellow"
+            : options.isBetween
             ? "purple"
             : options.isSelected
             ? "pink"
@@ -87,14 +91,16 @@ function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
       >
         {options ? options.cellDate?.getDate() : null}
       </Button>
-    );
-    /* <Cell
+    ); */
+    return (
+      <Cell
         onClick={() => onCellClick(options)}
         isSelected={options.isSelected}
         key={options.index}
       >
         {options.cellDate ? options.cellDate.getDate() : null}
-      </Cell> */
+      </Cell>
+    );
   }
 
   return (
@@ -104,7 +110,6 @@ function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
       <div className="calendar1">
         <Calendar
           date={currentDate}
-          onNext={(newDate) => setDate(newDate)}
           onPrev={(newDate) => setDate(newDate)}
           fromDate={fromDate}
           toDate={toDate}
@@ -115,7 +120,6 @@ function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
         <Calendar
           date={addMonths(currentDate, 1)}
           onNext={(newDate) => setDate(newDate)}
-          onPrev={(newDate) => setDate(subMonths(newDate, 1))}
           fromDate={fromDate}
           toDate={toDate}
           renderCell={renderthis}
