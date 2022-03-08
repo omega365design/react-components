@@ -1,0 +1,40 @@
+.calendar-box {
+  height: 500px;
+  width: 700px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    "title inputs"
+    "calendar1 calendar2"
+    "rules buttons";
+}
+
+.calendar-box .title {
+  grid-area: title;
+}
+
+.calendar-box .inputs {
+  grid-area: inputs;
+}
+
+.calendar-box .calendar1 {
+  grid-area: calendar1;
+  padding: 10px;
+}
+
+.calendar-box .calendar2 {
+  grid-area: calendar2;
+  padding: 10px;
+}
+
+.calendar-box .rules {
+  grid-area: rules;
+}
+
+.calendar-box .buttons {
+  grid-area: buttons;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}

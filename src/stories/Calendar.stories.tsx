@@ -1,10 +1,16 @@
 import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Calendar from "../components/Calendar";
+import { ChakraProvider } from "@chakra-ui/react";
 
 export default {
-  title: 'Calendar',
+  title: "Calendar",
   component: Calendar,
 } as ComponentMeta<typeof Calendar>;
 
-export const Primary: ComponentStory<typeof Calendar> = () => <Calendar />
+let Template: ComponentStory<typeof Calendar> = (args: any) => (
+  <Calendar {...args} />
+);
+
+export const Primary = Template.bind({});
+Primary.args = {};
