@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import CalendarBox from "../components/CalendarBox";
+import CalendarBox from "../components/CalendarBox/CalendarBox";
 
 export default {
   title: "Calendar Box",

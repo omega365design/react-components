@@ -1,6 +1,6 @@
 import { Box, Button, Icon, IconButton } from "@chakra-ui/react";
 import React, { useState } from "react";
-import Calendar from "./Calendar";
+import Calendar from "../Calendar/Calendar";
 import "./CalendarBox.css";
 import { SearchIcon, StarIcon } from "@chakra-ui/icons";
 import {
@@ -12,8 +12,8 @@ import {
   subMonths,
 } from "date-fns";
 import nb from "date-fns/locale/nb";
-import Cell from "./Cell";
-import { isBetween } from "../helpers/functions";
+import Cell from "../Cell/Cell";
+import { isBetween } from "../../helpers/functions";
 
 interface CalendarBoxProps {
   title?: string;

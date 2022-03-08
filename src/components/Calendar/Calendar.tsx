@@ -1,6 +1,11 @@
 import React, { ReactNode } from "react";
-import "./Calendar.css";
-import { getDates, isBetween, isSelected, ucfirst } from "../helpers/functions";
+
+import {
+  getDates,
+  isBetween,
+  isSelected,
+  ucfirst,
+} from "../../helpers/functions";
 import { Flex, Box, IconButton } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import {
@@ -12,7 +17,7 @@ import {
 } from "date-fns";
 import nb from "date-fns/locale/nb";
 import { isPast } from "date-fns/esm";
-import { CalendarProps } from "../helpers/types";
+import { CalendarProps } from "../../helpers/types";
 
 function Calendar({
   date,

@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Calendar from "../components/Calendar";
+import Calendar from "../components/Calendar/Calendar";
 import { ChakraProvider } from "@chakra-ui/react";
 
 export default {

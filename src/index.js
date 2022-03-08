@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import { ChakraProvider, Flex, Box, ColorModeScript } from "@chakra-ui/react";
-import CalendarBox from "./components/CalendarBox";
+import CalendarBox from "./components/CalendarBox/CalendarBox";
 
 ReactDOM.render(
   <ChakraProvider>
