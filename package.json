@@ -1,7 +1,9 @@
 {
-  "name": "react-components",
+  "name": "@omega365design/react-components",
   "version": "0.1.0",
-  "private": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/omega365design"
+  },
   "dependencies": {
     "@chakra-ui/react": "^1.8.6",
     "@emotion/react": "^11.8.1",
