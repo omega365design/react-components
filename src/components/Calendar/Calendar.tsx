@@ -25,7 +25,7 @@ function Calendar({
   onNext,
   fromDate,
   toDate,
-  renderCell,
+  renderCell: CellComponent,
 }: CalendarProps) {
   function handlePrevDate() {
     if (onPrev) onPrev(subMonths(date, 1));
@@ -41,14 +41,20 @@ function Calendar({
     </div>
   );
 
-  let dateToCell = (date: Date, i: number) =>
-    renderCell({
-      cellDate: date,
-      isBetween: isBetween(date, fromDate, toDate),
-      isSelected: isSelected(date, fromDate, toDate),
-      isPast: isPast(date) && differenceInDays(new Date(), date) > 0,
-      index: i,
-    });
+  let dateToCell = (date: Date, i: number) => (
+    <CellComponent
+      key={i}
+      {...{
+        cellDate: date,
+        isBetween: isBetween(date, fromDate, toDate),
+        isSelected: isSelected(date, fromDate, toDate),
+        isPast: isPast(date) && differenceInDays(new Date(), date) > 0,
+        fromDate,
+        toDate,
+        index: i,
+      }}
+    />
+  );
 
   return (
     <Box className="calendar">

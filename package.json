@@ -1,6 +1,6 @@
 {
   "name": "@omega365design/react-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/omega365design"
   },
@@ -8,20 +8,11 @@
     "@chakra-ui/react": "^1.8.6",
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.3",
-    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.1",
-    "@types/node": "^16.11.26",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.13",
     "date-fns": "^2.28.0",
     "framer-motion": "^6.2.8",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "5.0.0",
-    "typescript": "^4.6.2",
-    "web-vitals": "^2.1.4"
+    "react-icons": "^4.3.1",
+    "react-time-picker": "^4.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -60,6 +51,14 @@
       "last 1 safari version"
     ]
   },
+  "peerDependencies": {
+    "@types/node": "^16.11.26",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.13",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.0"
+  },
   "devDependencies": {
     "@chakra-ui/storybook-addon": "^1.0.3",
     "@rollup/plugin-commonjs": "^21.0.2",
@@ -75,8 +74,17 @@
     "@storybook/preset-create-react-app": "^4.0.1",
     "@storybook/react": "^6.4.19",
     "@storybook/testing-library": "^0.0.9",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.3",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/react-time-picker": "^4.0.2",
     "rollup": "^2.70.0",
     "rollup-plugin-dts": "^4.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.6.2",
+    "web-vitals": "^2.1.4",
     "webpack": "^5.70.0"
   },
   "files": [

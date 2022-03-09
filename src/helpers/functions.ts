@@ -1,9 +1,13 @@
 import {
+  differenceInDays,
   getDaysInMonth,
   getISODay,
   isAfter,
   isBefore,
   isEqual,
+  isSameDay,
+  setHours,
+  setMinutes,
   startOfMonth,
 } from "date-fns";
 
@@ -46,6 +50,12 @@ export function isSelected(
 ): boolean {
   return (
     (fromDate != null && isEqual(cellDate, fromDate)) ||
-    (toDate != null && isEqual(cellDate, toDate))
+    (toDate != null && isEqual(cellDate, toDate)) ||
+    (fromDate != null &&
+      differenceInDays(cellDate, fromDate) == 0 &&
+      isSameDay(fromDate, cellDate)) ||
+    (toDate != null &&
+      differenceInDays(cellDate, toDate) == 0 &&
+      isSameDay(toDate, cellDate))
   );
 }

@@ -1,12 +1,16 @@
 import { ReactNode } from "react";
 
-export type RenderCellFC = (options: {
+export interface RenderCellOptions {
   cellDate: Date | null;
   isBetween: boolean;
   isSelected: boolean;
   isPast: boolean;
   index: number;
-}) => ReactNode;
+  fromDate: Date | null | undefined;
+  toDate: Date | null | undefined;
+}
+
+export type RenderCellFC = (options: RenderCellOptions) => JSX.Element;
 
 export interface CalendarProps {
   date: Date;

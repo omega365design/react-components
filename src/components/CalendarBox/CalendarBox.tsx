@@ -1,8 +1,32 @@
-import { Box, Button, Icon, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Icon,
+  IconButton,
+  Input,
+  Tag,
+  Text,
+  useBoolean,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import Calendar from "../Calendar/Calendar";
 import "./CalendarBox.css";
-import { SearchIcon, StarIcon } from "@chakra-ui/icons";
+import { AiOutlineRedo } from "react-icons/ai";
+import TimePicker from "react-time-picker";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 import {
   addMonths,
   addDays,
@@ -10,36 +34,27 @@ import {
   isAfter,
   differenceInDays,
   subMonths,
+  areIntervalsOverlapping,
+  isEqual,
+  setHours,
+  setMinutes,
+  isSameDay,
+  addHours,
+  isBefore,
 } from "date-fns";
 import nb from "date-fns/locale/nb";
-import Cell from "../Cell/Cell";
-import { isBetween } from "../../helpers/functions";
+import { isBetween, ucfirst } from "../../helpers/functions";
+import { RenderCellOptions } from "../../helpers/types";
 
 interface CalendarBoxProps {
   title?: string;
 }
 
 function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
+  let { isOpen, onOpen, onClose } = useDisclosure();
   let [currentDate, setDate] = useState(new Date());
   let [fromDate, setFrom] = useState(null);
   let [toDate, setTo] = useState(null);
-
-  function isCellBetweenBookings(cellDate: Date, bookings: any[]) {
-    return bookings.some((booking) =>
-      isBetween(cellDate, booking.from, booking.to)
-    );
-  }
-
-  let bookings = [
-    {
-      from: addDays(new Date(), 10),
-      to: addDays(new Date(), 15),
-    },
-    {
-      from: addDays(new Date(), 17),
-      to: addDays(new Date(), 22),
-    },
-  ];
 
   let onCellClick = (options: any) => {
     if (fromDate && toDate) {
@@ -52,89 +67,286 @@ function CalendarBox({ title = "Velg dato" }: CalendarBoxProps) {
     }
   };
 
-  function renderthis(options: any) {
-    if (options.isBetween) {
-      return (
-        <IconButton aria-label="" icon={<StarIcon />} key={options.index} />
-      );
-    }
-
-    if (options.cellDate == null) return <div key={options.index}></div>;
-
-    if (isCellBetweenBookings(options.cellDate, bookings)) {
-      return (
-        <Button key={options.index} colorScheme={"red"} m={1}>
-          {options ? options.cellDate?.getDate() : null}
-        </Button>
-      );
-    }
-
-    /* return (
-      <Button
-        onClick={() => onCellClick(options)}
-        key={options.index}
-        disabled={options.isPast}
-        colorScheme={
-          options.cellDate
-            ? options.cellDate.getDay() == 0
-              ? "pink"
-              : "yellow"
-            : options.isBetween
-            ? "purple"
-            : options.isSelected
-            ? "pink"
-            : options.isPast
-            ? "gray"
-            : "teal"
-        }
-        m={1}
-      >
-        {options ? options.cellDate?.getDate() : null}
-      </Button>
-    ); */
-    return (
-      <Cell
-        onClick={() => onCellClick(options)}
-        isSelected={options.isSelected}
-        key={options.index}
-      >
-        {options.cellDate ? options.cellDate.getDate() : null}
-      </Cell>
-    );
-  }
-
   return (
-    <div className="calendar-box">
-      <div className="title">{title}</div>
-      <div className="inputs"></div>
-      <div className="calendar1">
-        <Calendar
-          date={currentDate}
-          onPrev={(newDate) => setDate(newDate)}
-          fromDate={fromDate}
-          toDate={toDate}
-          renderCell={renderthis}
-        />
-      </div>
-      <div className="calendar2">
-        <Calendar
-          date={addMonths(currentDate, 1)}
-          onNext={(newDate) => setDate(newDate)}
-          fromDate={fromDate}
-          toDate={toDate}
-          renderCell={renderthis}
-        />
-      </div>
-      <div className="rules">
-        {fromDate != null &&
-          toDate != null &&
-          `Days: ${differenceInDays(toDate, fromDate)}`}
-      </div>
-      <div className="buttons">
-        <Button leftIcon={<SearchIcon />}>Book</Button>
-      </div>
-    </div>
+    <>
+      <Box
+        width="280px"
+        height="auto"
+        border="1px solid #ddd"
+        borderRadius={10}
+        p={5}
+        boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px;"
+      >
+        <Text mb={5} fontSize="18px">
+          {!(fromDate && toDate)
+            ? "Legg til datoer."
+            : "Fortsett for bestilling."}
+        </Text>
+        <DatesDisplay fromDate={fromDate} toDate={toDate} onOpen={onOpen} />
+
+        <Button
+          disabled={!(fromDate && toDate)}
+          width="100%"
+          colorScheme="orange"
+        >
+          Bestill
+        </Button>
+      </Box>
+
+      <Modal size="2xl" isCentered isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Flex justify="space-between" mr={10}>
+              <h3>Velg datoer</h3>
+              <DatesDisplay
+                fromDate={fromDate}
+                toDate={toDate}
+                onOpen={() => {}}
+                fromLabel=""
+                toLabel=""
+                style={{ width: 280, height: 60 }}
+                displayDateFormat="dd.MM.yy 'kl.' HH:mm"
+              />
+            </Flex>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="calendar-box">
+              <Calendar
+                date={currentDate}
+                onPrev={(newDate) => setDate(newDate)}
+                fromDate={fromDate}
+                toDate={toDate}
+                renderCell={(opt) => (
+                  <SuperAdvancedCell
+                    {...opt}
+                    onClick={(options) => onCellClick(options)}
+                  />
+                )}
+              />
+              <Calendar
+                date={addMonths(currentDate, 1)}
+                onNext={(newDate) => setDate(subMonths(newDate, 1))}
+                fromDate={fromDate}
+                toDate={toDate}
+                renderCell={(opt) => (
+                  <SuperAdvancedCell
+                    {...opt}
+                    onClick={(options) => onCellClick(options)}
+                  />
+                )}
+              />
+            </div>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              leftIcon={<AiOutlineRedo />}
+              variant="ghost"
+              onClick={() => {
+                setFrom(null);
+                setTo(null);
+              }}
+              mr={3}
+            >
+              Tilbakestill
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Neste
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
+
+function doesCellCollide(cellDate: Date, bookings: any[]) {
+  return bookings.some(
+    (booking) =>
+      isBetween(cellDate, booking.from, booking.to) ||
+      differenceInDays(cellDate, booking.from) == 0 ||
+      differenceInDays(cellDate, booking.to) == 0
+  );
+}
+
+function doesSelectionOverlapWithExistingBooking(
+  fromDate: Date,
+  toDate: Date,
+  bookings: any[]
+) {
+  return bookings.some((booking) =>
+    areIntervalsOverlapping(
+      { start: fromDate, end: toDate },
+      { start: booking.from, end: booking.to }
+    )
+  );
+}
+
+let DatesDisplay = ({
+  style = {},
+  toDate,
+  fromDate,
+  onOpen,
+  fromLabel = "Legg til dato",
+  toLabel = "Legg til dato",
+  displayDateFormat = "eee PPP 'kl.' hh:mm",
+}: any) => (
+  <Grid
+    style={style}
+    gridTemplateColumns="1fr 1fr"
+    gridTemplateRows="1fr 2fr"
+    border="1px solid #ddd"
+    borderRadius={10}
+    p={2}
+    mb={4}
+    cursor="pointer"
+    _hover={{
+      bg: "gray.200",
+    }}
+    onClick={onOpen}
+  >
+    <GridItem fontSize="12px" fontWeight="bold">
+      FRA
+    </GridItem>
+    <GridItem fontSize="12px" fontWeight="bold">
+      TIL
+    </GridItem>
+    <GridItem
+      fontSize="14px"
+      fontWeight="normal"
+      color={fromDate != null ? "black" : "gray"}
+    >
+      {fromDate != null
+        ? ucfirst(format(fromDate, displayDateFormat, { locale: nb }))
+        : fromLabel}
+    </GridItem>
+    <GridItem
+      fontSize="14px"
+      fontWeight="normal"
+      color={toDate != null ? "black" : "gray"}
+    >
+      {toDate != null
+        ? ucfirst(format(toDate, displayDateFormat, { locale: nb }))
+        : toLabel}
+    </GridItem>
+  </Grid>
+);
+
+let SuperAdvancedCell = ({
+  cellDate,
+  isPast,
+  isSelected,
+  isBetween,
+  index,
+  onClick,
+  fromDate,
+  toDate,
+}: RenderCellOptions & { onClick: (options: any) => void }) => {
+  let { isOpen, onOpen, onClose } = useDisclosure();
+  let [date, setDate] = useState(cellDate ?? null);
+
+  let bookings = [
+    {
+      from: addDays(new Date(), 0),
+      to: addDays(new Date(), 5),
+    },
+    {
+      from: addDays(new Date(2022, 3, 5), 0),
+      to: addDays(new Date(2022, 3, 5), 2),
+    },
+  ];
+
+  if (!cellDate) return <div></div>;
+
+  return (
+    <>
+      <Button
+        _focus={{ outline: 0 }}
+        disabled={isPast || doesCellCollide(cellDate, bookings)}
+        borderRadius={0}
+        size="md"
+        m={0}
+        variant={
+          isPast || doesCellCollide(cellDate, bookings)
+            ? "calendar-disabled"
+            : isSelected
+            ? "calendar-selected"
+            : isBetween
+            ? "calendar-selected-between"
+            : "calendar"
+        }
+        onClick={() => {
+          if (fromDate && toDate) {
+            onClick({ cellDate });
+            return;
+          }
+
+          if (fromDate) {
+            if (
+              isSameDay(fromDate, cellDate) &&
+              differenceInDays(fromDate, cellDate) == 0
+            ) {
+              setDate(addHours(fromDate, 1));
+              onOpen();
+            } else if (isAfter(cellDate, fromDate)) {
+              onOpen();
+            }
+            /*  else if (
+              !doesSelectionOverlapWithExistingBooking(
+                fromDate,
+                cellDate,
+                bookings
+              )
+            ) {
+              onOpen();
+            } */
+          } else {
+            onOpen();
+          }
+        }}
+      >
+        {cellDate?.getDate()}
+      </Button>
+
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Velg tidspunkt</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <h2>
+              {cellDate &&
+                ucfirst(format(cellDate, "eeee PPP 'kl.'", { locale: nb }))}
+            </h2>
+            {cellDate && (
+              <TimePicker
+                autoFocus={true}
+                onChange={(value) => {
+                  let hours = value.toString().split(":")[0];
+                  let minutes = value.toString().split(":")[1];
+                  let date = setHours(cellDate, Number.parseInt(hours));
+                  date = setMinutes(date, Number.parseInt(minutes));
+                  setDate(date);
+                }}
+                value={date ?? ""}
+              />
+            )}
+          </ModalBody>
+
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onClose}>
+              Lukk
+            </Button>
+            <Button onClick={() => onClick({ cellDate: date })} variant="ghost">
+              Velg
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
 
 export default CalendarBox;
