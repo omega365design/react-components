@@ -292,8 +292,7 @@ let SuperAdvancedCell = ({
               onOpen();
             } else if (isAfter(cellDate, fromDate)) {
               onOpen();
-            }
-            /*  else if (
+            } else if (
               !doesSelectionOverlapWithExistingBooking(
                 fromDate,
                 cellDate,
@@ -301,7 +300,7 @@ let SuperAdvancedCell = ({
               )
             ) {
               onOpen();
-            } */
+            }
           } else {
             onOpen();
           }
