@@ -2,18 +2,45 @@
   height: 100%;
   width: 100%;
   user-select: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  border: 1px solid #ddd;
+  padding: 10px;
 }
 
-.calendar .body {
+.calendar-body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(6, 1fr);
 }
 
-.calendar .day {
+.calendar-weekday {
   font-size: 12px;
   color: rgb(34, 34, 34) !important;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.calendar-header {
+  font-size: 12px;
+  color: rgb(34, 34, 34) !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-month {
+  font-size: 18px;
+}
+
+.calendar-button {
+  background-color: black;
+  color: white;
+}
+
+.calendar-button:hover {
+  background-color: rgba(0, 0, 0, 0.541);
+  color: white;
 }

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
 import "./Calendar.css";
 import {
   getDates,
@@ -6,8 +6,7 @@ import {
   isSelected,
   ucfirst,
 } from "../../helpers/functions";
-import { Flex, Box, IconButton } from "@chakra-ui/react";
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { BsArrowLeftShort, BsArrowRightShort } from "react-icons/bs";
 import {
   format,
   subMonths,
@@ -23,20 +22,22 @@ function Calendar({
   date,
   onPrev,
   onNext,
+  nextButton: NextButton,
+  prevButton: PrevButton,
   fromDate,
   toDate,
   renderCell: CellComponent,
 }: CalendarProps) {
-  function handlePrevDate() {
+  let handlePrevDate = useCallback(() => {
     if (onPrev) onPrev(subMonths(date, 1));
-  }
+  }, [onPrev]);
 
-  function handleNextDate() {
+  let handleNextDate = useCallback(() => {
     if (onNext) onNext(addMonths(date, 1));
-  }
+  }, [onNext]);
 
   let dayToCell = (day: string, i: number) => (
-    <div key={i} className="day">
+    <div key={i} className="calendar-weekday">
       {day}
     </div>
   );
@@ -57,41 +58,51 @@ function Calendar({
   );
 
   return (
-    <Box className="calendar">
-      <Flex width="100%" justifyContent="space-between">
-        <Box>
-          {onPrev && (
-            <IconButton
-              aria-label="Go to previous month"
-              icon={<ArrowBackIcon />}
-              onClick={handlePrevDate}
-            />
-          )}
-        </Box>
-        <Box>
+    <div className="calendar">
+      <div className="calendar-header">
+        <div>
+          {onPrev &&
+            (PrevButton ? (
+              <PrevButton onClick={handlePrevDate} />
+            ) : (
+              <button
+                className="calendar-button"
+                aria-label="Go to previous month"
+                onClick={handlePrevDate}
+              >
+                <BsArrowLeftShort style={{ width: 30, height: 30 }} />
+              </button>
+            ))}
+        </div>
+        <div className="calendar-month">
           {ucfirst(
             format(date, isThisYear(date) ? "LLLL" : "LLLL Y", {
               locale: nb,
             })
           )}
-        </Box>
-        <Box>
-          {onNext && (
-            <IconButton
-              aria-label="Go to next month"
-              icon={<ArrowForwardIcon />}
-              onClick={handleNextDate}
-            />
-          )}
-        </Box>
-      </Flex>
-      <div className="body">
+        </div>
+        <div>
+          {onNext &&
+            (NextButton ? (
+              <NextButton onClick={handleNextDate} />
+            ) : (
+              <button
+                className="calendar-button"
+                aria-label="Go to next month"
+                onClick={() => handleNextDate()}
+              >
+                <BsArrowRightShort style={{ width: 30, height: 30 }} />
+              </button>
+            ))}
+        </div>
+      </div>
+      <div className="calendar-body">
         {["man", "tir", "ons", "tor", "fre", "lør", "søn"]
           .map(ucfirst)
           .map(dayToCell)}
         {getDates(date).map(dateToCell)}
       </div>
-    </Box>
+    </div>
   );
 }
 

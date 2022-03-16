@@ -10,7 +10,13 @@ export interface RenderCellOptions {
   toDate: Date | null | undefined;
 }
 
+export interface CalendarButtonProps {
+  onClick: () => void;
+}
+
 export type RenderCellFC = (options: RenderCellOptions) => JSX.Element;
+
+export type CalendarButtonFC = (options: CalendarButtonProps) => JSX.Element;
 
 export interface CalendarProps {
   date: Date;
@@ -18,5 +24,7 @@ export interface CalendarProps {
   toDate?: Date | null;
   onPrev?: (date: Date) => void;
   onNext?: (date: Date) => void;
+  nextButton?: CalendarButtonFC;
+  prevButton?: CalendarButtonFC;
   renderCell: RenderCellFC;
 }
