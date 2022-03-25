@@ -65,7 +65,7 @@ function Calendar({
 
   return (
     <div className={classNames.className}>
-      <div className="calendar-header">
+      <div className={classNames.headerClassName}>
         <div>
           {onPrev &&
             (PrevButton ? (
