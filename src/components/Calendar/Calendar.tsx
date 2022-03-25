@@ -27,6 +27,12 @@ function Calendar({
   fromDate,
   toDate,
   renderCell: CellComponent,
+  classNames = {
+    className: "calendar",
+    headerClassName: "calendar-header",
+    buttonClassName: "calendar-button",
+    bodyClassName: "calendar-body",
+  },
 }: CalendarProps) {
   let handlePrevDate = useCallback(() => {
     if (onPrev) onPrev(subMonths(date, 1));
@@ -58,7 +64,7 @@ function Calendar({
   );
 
   return (
-    <div className="calendar">
+    <div className={classNames.className}>
       <div className="calendar-header">
         <div>
           {onPrev &&
@@ -66,7 +72,7 @@ function Calendar({
               <PrevButton onClick={handlePrevDate} />
             ) : (
               <button
-                className="calendar-button"
+                className={classNames.buttonClassName}
                 aria-label="Go to previous month"
                 onClick={handlePrevDate}
               >
@@ -74,7 +80,7 @@ function Calendar({
               </button>
             ))}
         </div>
-        <div className="calendar-month">
+        <div className={classNames.monthClassName}>
           {ucfirst(
             format(date, isThisYear(date) ? "LLLL" : "LLLL Y", {
               locale: nb,
@@ -87,7 +93,7 @@ function Calendar({
               <NextButton onClick={handleNextDate} />
             ) : (
               <button
-                className="calendar-button"
+                className={classNames.buttonClassName}
                 aria-label="Go to next month"
                 onClick={() => handleNextDate()}
               >
@@ -96,7 +102,7 @@ function Calendar({
             ))}
         </div>
       </div>
-      <div className="calendar-body">
+      <div className={classNames.bodyClassName}>
         {["man", "tir", "ons", "tor", "fre", "lør", "søn"]
           .map(ucfirst)
           .map(dayToCell)}
