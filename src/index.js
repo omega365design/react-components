@@ -35,15 +35,14 @@ let theme = extendTheme({
   },
 });
 
-function App() {
-  let [date, setDate] = useState(new Date());
+function App(config) {
+  let [date, setDate] = useState(config.date);
 
   return (
     <Calendar
       date={date}
       onPrev={(date) => setDate(date)}
       onNext={(date) => setDate(date)}
-      nextButton={Button}
       renderCell={({ cellDate }) => (
         <div>{cellDate ? cellDate.getDate() : ""}</div>
       )}
@@ -51,15 +50,20 @@ function App() {
   );
 }
 
-ReactDOM.render(
-  <ChakraProvider theme={theme}>
-    <ColorModeScript />
-    <Flex height="100vh" justifyContent="center" alignItems="center">
-      {/* <CalendarBox /> */}
-      <Box width="400px" height="400px">
-        <App />
-      </Box>
-    </Flex>
-  </ChakraProvider>,
-  document.getElementById("root")
-);
+class Bookflow {
+  constructor(config) {
+    this.date = config.date;
+    this.target = config.target;
+  }
+
+  render() {
+    ReactDOM.render(
+      <App date={this.date} />,
+      document.getElementById(this.target)
+    );
+  }
+
+  getEntities()
+}
+
+window.Bookflow = Bookflow;
