@@ -22,6 +22,7 @@ export interface CalendarClassNames {
   bodyClassName?: string;
   monthClassName?: string;
   buttonClassName?: string;
+  weekDayClassName?: string;
 }
 
 export type CalendarButtonFC = (options: CalendarButtonProps) => JSX.Element;

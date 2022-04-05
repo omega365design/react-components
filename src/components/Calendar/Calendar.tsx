@@ -32,6 +32,7 @@ function Calendar({
     headerClassName: "calendar-header",
     buttonClassName: "calendar-button",
     bodyClassName: "calendar-body",
+    weekDayClassName: "calendar-weekday",
   },
   weekDays = ["man", "tir", "ons", "tor", "fre", "lør", "søn"],
 }: CalendarProps) {
@@ -44,7 +45,7 @@ function Calendar({
   }, [onNext]);
 
   let dayToCell = (day: string, i: number) => (
-    <div key={i} className="calendar-weekday">
+    <div key={i} className={classNames.weekDayClassName}>
       {day}
     </div>
   );
