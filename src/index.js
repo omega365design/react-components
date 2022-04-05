@@ -50,20 +50,4 @@ function App(config) {
   );
 }
 
-class Bookflow {
-  constructor(config) {
-    this.date = config.date;
-    this.target = config.target;
-  }
-
-  render() {
-    ReactDOM.render(
-      <App date={this.date} />,
-      document.getElementById(this.target)
-    );
-  }
-
-  getEntities()
-}
-
-window.Bookflow = Bookflow;
+ReactDOM.render(<App date={new Date()} />, document.getElementById("root"));

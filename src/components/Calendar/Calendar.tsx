@@ -33,6 +33,7 @@ function Calendar({
     buttonClassName: "calendar-button",
     bodyClassName: "calendar-body",
   },
+  weekDays = ["man", "tir", "ons", "tor", "fre", "lør", "søn"],
 }: CalendarProps) {
   let handlePrevDate = useCallback(() => {
     if (onPrev) onPrev(subMonths(date, 1));
@@ -103,9 +104,7 @@ function Calendar({
         </div>
       </div>
       <div className={classNames.bodyClassName}>
-        {["man", "tir", "ons", "tor", "fre", "lør", "søn"]
-          .map(ucfirst)
-          .map(dayToCell)}
+        {weekDays.map(ucfirst).map(dayToCell)}
         {getDates(date).map(dateToCell)}
       </div>
     </div>

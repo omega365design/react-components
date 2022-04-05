@@ -36,4 +36,5 @@ export interface CalendarProps {
   prevButton?: CalendarButtonFC;
   renderCell: RenderCellFC;
   classNames?: CalendarClassNames;
+  weekDays?: string[];
 }
