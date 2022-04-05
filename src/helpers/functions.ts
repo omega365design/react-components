@@ -9,9 +9,11 @@ import {
   setHours,
   setMinutes,
   startOfMonth,
+  addDays,
+  subDays,
 } from "date-fns";
 
-export function getDates(date: Date) {
+/* export function getDates(date: Date) {
   let daysInMonth = getDaysInMonth(date);
   let dayOfWeek = getISODay(startOfMonth(date));
   let emptyCells = dayOfWeek - 1;
@@ -20,6 +22,22 @@ export function getDates(date: Date) {
     if (i < emptyCells) return null;
     return new Date(date.getUTCFullYear(), date.getMonth(), i - emptyCells + 1);
   });
+
+  return cells;
+} */
+
+export function getDates(date: Date) {
+  let startDate = startOfMonth(date);
+  let daysInMonth = getDaysInMonth(date);
+  let dayOfWeek = getISODay(startOfMonth(date));
+  let emptyCells = dayOfWeek - 1;
+  let cells = new Array(7 * 6).fill(0);
+
+  cells = cells.map((_, i) =>
+    i - emptyCells < 0
+      ? subDays(startDate, emptyCells - i)
+      : addDays(startDate, i - emptyCells)
+  );
 
   return cells;
 }
